@@ -36,12 +36,24 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    "django.contrib.staticfiles",
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    "videoflixBackend.apps.VideoflixbackendConfig"
+    "debug_toolbar",
+    'import_export',
+    "videoflixBackend.apps.VideoflixbackendConfig", 
+    "django_rq",
+    'rest_framework',
+    "user"
 ]
 
+AUTH_USER_MODEL = "user.CustomUser"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/staticfiles")
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,11 +61,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        
+        'DEFAULT_TIMEOUT': 360,
+    },
+}
+
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.chache.RedisCache", 
+        "BACKEND": "django_redis.cache.RedisCache", 
         "LOCATION": "redis://127.0.0.1:6379/1", 
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
@@ -63,6 +86,12 @@ CACHES = {
 }
 
 ROOT_URLCONF = 'videoflix.urls'
+
+INTERNAL_IPS = [
+    
+    "127.0.0.1",
+   
+]
 
 TEMPLATES = [
     {
